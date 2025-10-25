@@ -3,11 +3,14 @@ Description=Bluetoothctl API Service
 After=network.target bluetooth.target
 
 [Service]
-Type=simple
+Type=notify
 User=peteyycz
 WorkingDirectory=/home/peteyycz/bluetoothctl-api
 Environment="PATH=/usr/local/bin:/usr/bin:/bin"
-ExecStart=/usr/bin/python3 /home/peteyycz/bluetoothctl-api/app.py
+ExecStart=/usr/local/bin/gunicorn --config gunicorn.conf.py app:app
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
 Restart=always
 RestartSec=10
 

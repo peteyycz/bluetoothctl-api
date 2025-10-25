@@ -10,10 +10,20 @@ pip install -r requirements.txt
 
 ## Usage
 
-Start the server:
+### Development
+
+Start the development server:
 
 ```bash
 python app.py
+```
+
+### Production
+
+Start the production server with Gunicorn:
+
+```bash
+gunicorn --config gunicorn.conf.py app:app
 ```
 
 The server will run on `http://localhost:5000`
@@ -68,15 +78,15 @@ curl http://localhost:5000/health
 
 - Python 3.6+
 - Flask
+- Gunicorn (for production)
 - `bluetoothctl` command-line tool (usually part of BlueZ package on Linux)
 
 ## Installation on Raspbian Lite
 
-1. Install Python and Flask:
+1. Install Python and dependencies:
 ```bash
 sudo apt update
 sudo apt install python3 python3-pip
-pip3 install Flask==3.0.0
 ```
 
 2. Copy the application to your Raspberry Pi:
@@ -87,10 +97,17 @@ sudo mkdir -p /home/peteyycz/bluetoothctl-api
 # Copy files
 sudo cp app.py /home/peteyycz/bluetoothctl-api/
 sudo cp requirements.txt /home/peteyycz/bluetoothctl-api/
+sudo cp gunicorn.conf.py /home/peteyycz/bluetoothctl-api/
 sudo chown -R peteyycz:peteyycz /home/peteyycz/bluetoothctl-api
 ```
 
-3. Install and enable the systemd service:
+3. Install Python dependencies:
+```bash
+cd /home/peteyycz/bluetoothctl-api
+pip3 install -r requirements.txt
+```
+
+4. Install and enable the systemd service:
 ```bash
 # Copy service file
 sudo cp bluetoothctl-api.service /etc/systemd/system/
@@ -108,13 +125,13 @@ sudo systemctl start bluetoothctl-api.service
 sudo systemctl status bluetoothctl-api.service
 ```
 
-4. View logs:
+5. View logs:
 ```bash
 # View service logs
 sudo journalctl -u bluetoothctl-api.service -f
 ```
 
-5. Manage the service:
+6. Manage the service:
 ```bash
 # Stop the service
 sudo systemctl stop bluetoothctl-api.service

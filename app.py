@@ -71,4 +71,5 @@ def health():
     return jsonify({'status': 'healthy'}), 200
 
 if __name__ == '__main__':
+    # Only used for development
     app.run(host='0.0.0.0', port=5000, debug=True)
